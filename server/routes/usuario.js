@@ -19,7 +19,7 @@ app.get('/usuario', function(req, res) {
 
 
     Usuario
-        .find({ estado: false }, 'nombre email role estado google img')
+        .find({}, 'nombre email role estado google img')
         .skip(desde)
         .limit(limite)
         .exec((err, usuarios) => {
@@ -30,7 +30,7 @@ app.get('/usuario', function(req, res) {
                 });
             }
 
-            Usuario.count({ estado: false }, (err, conteo) => {
+            Usuario.count({}, (err, conteo) => {
                 res.json({
                     ok: true,
                     usuarios,
