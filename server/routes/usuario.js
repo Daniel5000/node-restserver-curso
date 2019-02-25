@@ -5,11 +5,23 @@ const bcrypt = require('bcryptjs');
 const _ = require('underscore');
 
 const Usuario = require('../models/usuario');
+
+const { verificaToken } = require('../middlewares/autenticacion');
+
+const { verificaAdmin_Role } = require('../middlewares/autenticacion');
+
 const app = express();
 
 
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
     // res.json('get Usuario LOCAL!!');
+
+    // return res.json({
+    //     usuario: req.usuario,
+    //     nombre: req.usuario.nombre,
+    //     email: req.usuario.email
+    // });
+
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -40,7 +52,8 @@ app.get('/usuario', function(req, res) {
         })
 });
 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], function(req, res) {
+    //verificaAdmin_Role
 
     let body = req.body;
 
@@ -70,11 +83,16 @@ app.post('/usuario', function(req, res) {
     })
 });
 
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
 
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
+    return res.json({
+        usuario: req.usuario,
+        nombre: req.usuario.nombre,
+        email: req.usuario.email
+    });
 
     Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
 
@@ -96,7 +114,7 @@ app.put('/usuario/:id', function(req, res) {
 
 });
 
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], function(req, res) {
     // res.json('delete Usuario');
     let id = req.params.id;
     // Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
@@ -107,6 +125,7 @@ app.delete('/usuario/:id', function(req, res) {
                 err
             });
         }
+        console.log(usuarioBorrado);
         if (!usuarioBorrado) {
             return res.status(400).json({
                 ok: false,
