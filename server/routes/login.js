@@ -15,7 +15,6 @@ app.get('/login', (req, res) => {
 
     Usuario.findOne({ email: body.email }, (err, usuarioDB) => {
 
-        console.log(usuarioDB);
         if (err) {
 
             return res.status(500).json({
@@ -70,9 +69,6 @@ async function verify(token) {
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
     });
     const payload = ticket.getPayload();
-    console.log('PAYLOAD');
-    console.log(payload);
-
     return {
         nombre: payload.name,
         email: payload.email,
@@ -101,12 +97,7 @@ app.post('/google', async(req, res) => {
 
     console.log('aqui esta el usuario devuelto por google 1');
     console.log(googleUser)
-    console.log('EMAILLLLLLLLLLLLLLL')
-    console.log(googleUser.email)
-
-
-
-    //pregunta si existe un usuario con ese mail
+        //pregunta si existe un usuario con ese mail
     Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
 
         if (err) {
@@ -148,7 +139,7 @@ app.post('/google', async(req, res) => {
 
             usuario.nombre = googleUser.nombre;
             usuario.email = googleUser.email;
-            usuario.img = googleUser.picture;
+            usuario.img = googleUser.img;
             usuario.google = true;
             usuario.password = ':)';
 

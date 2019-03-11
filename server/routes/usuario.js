@@ -52,7 +52,8 @@ app.get('/usuario', verificaToken, (req, res) => {
         })
 });
 
-app.post('/usuario', [verificaToken, verificaAdmin_Role], function(req, res) {
+app.post('/usuario', function(req, res) {
+    //[verificaToken, verificaAdmin_Role],
     //verificaAdmin_Role
 
     let body = req.body;
@@ -61,6 +62,7 @@ app.post('/usuario', [verificaToken, verificaAdmin_Role], function(req, res) {
         nombre: body.nombre,
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
+        img: ``,
         role: body.role
     });
 
